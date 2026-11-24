@@ -5,7 +5,11 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public Transform letterGrid;
+    public Transform row1;
+    public Transform row2;
+    public Transform row3;
+    public Transform row4;
+    public Transform row5;
     public GameObject letterButtonPrefab;
 
     public TMP_Text wordText;
@@ -39,28 +43,38 @@ public class GameManager : MonoBehaviour
     
 
     void GenerateLetterButtons()
+{
+    string[] keyboardRows =
+{
+    "ABCDEF",
+    "GHIJKL",
+    "MNOPQR",
+    "STUVWX",
+    "YZ"
+};
+
+Transform[] rows = { row1, row2, row3, row4, row5 };
+
+    for (int i = 0; i < rows.Length; i++)
     {
-        for (char letter = 'A'; letter <= 'Z'; letter++)
+        foreach (char letter in keyboardRows[i])
         {
-            GameObject newButton =
-                Instantiate(letterButtonPrefab, letterGrid);
+            GameObject newButton = Instantiate(letterButtonPrefab, rows[i]);
 
-            TMP_Text buttonText =
-                newButton.GetComponentInChildren<TMP_Text>();
-
+            TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
             buttonText.text = letter.ToString();
 
             char selectedLetter = letter;
-
             Button button = newButton.GetComponent<Button>();
 
             button.onClick.AddListener(() =>
-                {
-                    GuessLetter(selectedLetter);
-                    button.interactable = false;
-                });
+            {
+                GuessLetter(selectedLetter);
+                button.interactable = false;
+            });
         }
     }
+}
 
     void GuessLetter(char letter)
     {
